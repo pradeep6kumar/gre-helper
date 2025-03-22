@@ -1,0 +1,46 @@
+.gre-highlighted-word {
+  background-color: #ffff99;
+  color: #000000;
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted #000;
+}
+
+.gre-tooltip {
+  position: absolute;
+  z-index: 10000;
+  background-color: #333;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  max-width: 300px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  bottom: 125%; /* Position above the word */
+  left: 50%;
+  transform: translateX(-50%); /* Center horizontally */
+  white-space: normal;
+  line-height: 1.4;
+  pointer-events: none; /* Prevent tooltip from blocking mouse events */
+  --arrow-direction: down; /* Default arrow direction */
+}
+
+/* Arrow pointing down (default) */
+.gre-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #333 transparent transparent transparent;
+}
+
+/* Arrow pointing up (when tooltip is below the word) */
+.gre-tooltip[style*="--arrow-direction: up"]::after {
+  top: auto;
+  bottom: 100%;
+  border-color: transparent transparent #333 transparent;
+} 
