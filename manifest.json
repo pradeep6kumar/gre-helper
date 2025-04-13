@@ -2,30 +2,35 @@
   "manifest_version": 2,
   "name": "GRE Word Helper",
   "version": "1.0",
-  "description": "Highlights GRE words on webpages and shows their meanings",
+  "description": "Helps users learn GRE vocabulary by highlighting words on web pages and showing their meanings in tooltips",
   "icons": {
+    "19": "icons/icon-19.png",
+    "38": "icons/icon-38.png",
     "48": "icons/icon-48.png",
     "96": "icons/icon-96.png"
   },
   "permissions": [
+    "storage",
     "activeTab",
-    "storage"
+    "<all_urls>"
   ],
   "browser_action": {
     "default_icon": {
       "19": "icons/icon-19.png",
       "38": "icons/icon-38.png"
     },
-    "default_title": "GRE Word Helper",
-    "default_popup": "popup/popup.html"
+    "default_popup": "popup/popup.html",
+    "default_title": "GRE Word Helper"
   },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["js/wordlist.js", "js/content.js"]
+      "js": ["js/wordlist.js", "js/content.js"],
+      "css": ["css/tooltip.css"],
+      "run_at": "document_end"
     }
   ],
   "web_accessible_resources": [
-    "css/tooltip.css"
+    "js/wordlist.js"
   ]
 } 

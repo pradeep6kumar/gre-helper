@@ -1,0 +1,319 @@
+{
+  "prompt": {
+    "title": "Create a GRE Word Helper Firefox Extension",
+    "description": "Create a Firefox extension that helps users learn GRE vocabulary by highlighting words on web pages and showing their meanings in tooltips, without modifying the original page content. All necessary files and folders will be automatically created based on this prompt.",
+    "requirements": {
+      "core_functionality": [
+        "Scan web pages for GRE vocabulary words",
+        "Highlight matching words with a yellow background",
+        "Show word meanings in tooltips on hover",
+        "Allow users to enable/disable highlighting",
+        "Display a count of GRE words found on the page",
+        "Preserve original page content - do not modify or replace text nodes"
+      ],
+      "technical_requirements": [
+        "Use manifest v2 for Firefox extension compatibility",
+        "Implement content scripts for page scanning",
+        "Use browser storage for extension state",
+        "Create a popup interface for user controls",
+        "Handle dynamic page content updates",
+        "Include a comprehensive wordlist.js file with GRE vocabulary and meanings (critical dependency)",
+        "Automatically generate and place icon files in the icons directory",
+        "Automatically move wordlist.js to the js/ directory",
+        "Automatically execute icon conversion script"
+      ],
+      "user_experience": [
+        "Smooth and non-intrusive highlighting",
+        "Clear and readable tooltips",
+        "Responsive popup interface",
+        "Persistent extension state",
+        "No modification of original page content"
+      ],
+      "critical_dependencies": [
+        {
+          "file": "js/wordlist.js",
+          "description": "Contains the GRE vocabulary dictionary with words and their meanings",
+          "importance": "Critical - Extension cannot function without this file",
+          "format": "JavaScript object with word-meaning pairs",
+          "example": "const greWordList = { 'word': 'meaning', ... }",
+          "location": "Must be placed in the js/ directory",
+          "user_input_required": true,
+          "input_description": "User must provide the wordlist.js file containing the GRE vocabulary dictionary",
+          "file_handling": {
+            "source": "wordlist.js",
+            "destination": "js/wordlist.js",
+            "move_operation": "Copy the file to js/ directory and verify the move",
+            "verification": "Check if file exists in js/ directory after move"
+          }
+        }
+      ],
+      "file_organization": [
+        {
+          "directory": "icons/",
+          "files": [
+            "icon.svg",
+            "icon-19.png",
+            "icon-38.png",
+            "icon-48.png",
+            "icon-96.png",
+            "convert_icons.ps1"
+          ],
+          "description": "Extension icons in various sizes",
+          "importance": "Required for proper extension display",
+          "auto_generate": true,
+          "generation_instructions": {
+            "source": "icons/icon.svg",
+            "sizes": [
+              { "name": "icon-19.png", "size": 19 },
+              { "name": "icon-38.png", "size": 38 },
+              { "name": "icon-48.png", "size": 48 },
+              { "name": "icon-96.png", "size": 96 }
+            ],
+            "conversion_command": "powershell -ExecutionPolicy Bypass -File icons/convert_icons.ps1",
+            "verification": "Check if all PNG files exist and have correct dimensions"
+          }
+        },
+        {
+          "directory": "js/",
+          "files": [
+            "wordlist.js",
+            "content.js"
+          ],
+          "description": "JavaScript files for extension functionality",
+          "auto_create": true,
+          "file_handling": {
+            "wordlist.js": {
+              "operation": "move",
+              "source": "wordlist.js",
+              "destination": "js/wordlist.js",
+              "verify": true
+            }
+          }
+        },
+        {
+          "directory": "popup/",
+          "files": [
+            "popup.html",
+            "popup.js"
+          ],
+          "description": "Popup interface files",
+          "auto_create": true
+        },
+        {
+          "directory": "css/",
+          "files": [
+            "tooltip.css"
+          ],
+          "description": "Style files for tooltips",
+          "auto_create": true
+        }
+      ]
+    },
+    "implementation_steps": [
+      {
+        "step": 1,
+        "task": "Create required directories",
+        "directories": [
+          "icons/",
+          "js/",
+          "popup/",
+          "css/"
+        ],
+        "reasoning": "Set up the basic directory structure for the extension",
+        "auto_create": true,
+        "verification": "Check if all required directories exist"
+      },
+      {
+        "step": 2,
+        "task": "Set up extension structure",
+        "files": ["manifest.json"],
+        "reasoning": "Define extension metadata and permissions",
+        "auto_create": true,
+        "verification": "Check if manifest.json exists and has correct content"
+      },
+      {
+        "step": 3,
+        "task": "Create icon files",
+        "files": [
+          "icons/icon.svg",
+          "icons/convert_icons.ps1",
+          "icons/icon-19.png",
+          "icons/icon-38.png",
+          "icons/icon-48.png",
+          "icons/icon-96.png"
+        ],
+        "reasoning": "Automatically generate and place icon files for the extension",
+        "priority": "high",
+        "auto_generate": true,
+        "steps": [
+          "Create SVG icon file",
+          "Create conversion script",
+          "Execute conversion script to generate PNG files",
+          "Verify all PNG files exist and have correct dimensions"
+        ],
+        "verification": "Check if all icon files exist and are properly sized"
+      },
+      {
+        "step": 4,
+        "task": "Handle wordlist.js",
+        "files": ["js/wordlist.js"],
+        "reasoning": "Move wordlist.js to the correct location",
+        "priority": "high",
+        "dependencies": "none",
+        "location": "Must be placed in js/ directory",
+        "user_input_required": true,
+        "steps": [
+          "Create js directory if it doesn't exist",
+          "Copy wordlist.js to js/ directory",
+          "Verify the file was moved successfully"
+        ],
+        "verification": "Check if wordlist.js exists in js/ directory"
+      },
+      {
+        "step": 5,
+        "task": "Create content script",
+        "files": ["js/content.js"],
+        "reasoning": "Implement page scanning and word highlighting without modifying original content",
+        "dependencies": ["js/wordlist.js"],
+        "constraints": [
+          "Do not modify or replace text nodes",
+          "Use CSS for highlighting instead of DOM manipulation",
+          "Preserve original page content"
+        ],
+        "auto_create": true,
+        "verification": "Check if content.js exists and has correct functionality"
+      },
+      {
+        "step": 6,
+        "task": "Create popup interface",
+        "files": ["popup/popup.html", "popup/popup.js"],
+        "reasoning": "Provide user controls and word count display",
+        "auto_create": true,
+        "verification": "Check if popup files exist and have correct content"
+      },
+      {
+        "step": 7,
+        "task": "Style tooltips",
+        "files": ["css/tooltip.css"],
+        "reasoning": "Ensure tooltips are readable and properly positioned",
+        "auto_create": true,
+        "verification": "Check if tooltip.css exists and has correct styles"
+      }
+    ],
+    "error_handling": {
+      "content_script": "Handle cases where page scanning fails or takes too long",
+      "popup": "Show appropriate error messages when communication fails",
+      "storage": "Provide fallback values when storage is unavailable",
+      "wordlist": "Verify wordlist.js is loaded and contains valid data before scanning",
+      "icons": "Verify all icon files exist and are properly sized",
+      "file_operations": "Handle file movement and creation errors"
+    },
+    "self_verification": [
+      "Check if word highlighting is working correctly",
+      "Verify tooltip positioning and visibility",
+      "Test extension state persistence",
+      "Ensure proper cleanup of highlights",
+      "Verify wordlist.js is properly loaded and accessible",
+      "Verify original page content is preserved",
+      "Check all icon files are present and properly sized",
+      "Verify all directories exist",
+      "Verify all files are in their correct locations",
+      "Verify file permissions are correct"
+    ],
+    "reasoning_types": {
+      "text_processing": "Word matching and highlighting",
+      "ui_interaction": "Tooltip display and positioning",
+      "state_management": "Extension state and storage",
+      "communication": "Content script and popup messaging",
+      "data_management": "Word list loading and validation",
+      "content_preservation": "Ensuring original page content is not modified",
+      "file_operations": "Handling file creation and movement"
+    },
+    "implementation_notes": {
+      "folder_creation": "All necessary folders will be automatically created",
+      "file_generation": "All files except wordlist.js will be automatically generated",
+      "user_input": "Only wordlist.js requires user input - all other files will be created automatically",
+      "icon_generation": "Icons will be automatically generated and placed in the icons directory",
+      "directory_structure": "The following directory structure will be automatically created: icons/, js/, popup/, css/",
+      "file_handling": {
+        "wordlist.js": "The file will be automatically moved to the js/ directory",
+        "icons": "SVG will be converted to PNG in all required sizes",
+        "verification": "All file operations will be verified"
+      }
+    },
+    "runtime_instructions": {
+      "directory_creation": {
+        "command": "New-Item -ItemType Directory -Path {dir} -Force",
+        "directories": ["icons", "js", "popup", "css"]
+      },
+      "file_creation": {
+        "manifest.json": {
+          "content": {
+            "manifest_version": 2,
+            "name": "GRE Word Helper",
+            "version": "1.0",
+            "description": "Helps users learn GRE vocabulary by highlighting words on web pages and showing their meanings in tooltips",
+            "icons": {
+              "19": "icons/icon-19.png",
+              "38": "icons/icon-38.png",
+              "48": "icons/icon-48.png",
+              "96": "icons/icon-96.png"
+            },
+            "permissions": ["storage", "activeTab"],
+            "browser_action": {
+              "default_icon": {
+                "19": "icons/icon-19.png",
+                "38": "icons/icon-38.png"
+              },
+              "default_popup": "popup/popup.html"
+            },
+            "content_scripts": [
+              {
+                "matches": ["<all_urls>"],
+                "js": ["js/wordlist.js", "js/content.js"],
+                "css": ["css/tooltip.css"]
+              }
+            ]
+          }
+        },
+        "icons/icon.svg": {
+          "content": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><svg width=\"96\" height=\"96\" viewBox=\"0 0 96 96\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"20\" y=\"20\" width=\"56\" height=\"56\" rx=\"4\" fill=\"#2196F3\"/><rect x=\"24\" y=\"24\" width=\"48\" height=\"48\" rx=\"2\" fill=\"#FFFFFF\"/><path d=\"M40 40 L40 56 L56 56 L56 48 L48 48 L48 40 Z\" fill=\"#2196F3\"/><path d=\"M60 40 L60 56 L68 56 L68 48 L64 48 L68 40 Z\" fill=\"#2196F3\"/><path d=\"M64 48 L68 48\" stroke=\"#2196F3\" stroke-width=\"4\"/><path d=\"M72 40 L72 56 L80 56 L80 48 L76 48 L80 40 Z\" fill=\"#2196F3\"/><path d=\"M76 48 L80 48\" stroke=\"#2196F3\" stroke-width=\"4\"/></svg>"
+        },
+        "icons/convert_icons.ps1": {
+          "content": "# ImageMagick installation path\n$imagemagickPath = \"C:\\Program Files\\ImageMagick-7.1.1-Q16-HDRI\\magick.exe\"\n\n# Check if ImageMagick exists at the specified path\nif (-not (Test-Path $imagemagickPath)) {\n    Write-Host \"ImageMagick not found at: $imagemagickPath\"\n    Write-Host \"Please verify the installation path or install ImageMagick from: https://imagemagick.org/script/download.php\"\n    exit 1\n}\n\n$sizes = @(\n    @{name=\"icon-19.png\"; size=19},\n    @{name=\"icon-38.png\"; size=38},\n    @{name=\"icon-48.png\"; size=48},\n    @{name=\"icon-96.png\"; size=96}\n)\n\nWrite-Host \"Starting icon conversion...\"\nWrite-Host \"Current directory: $PWD\"\n\nforeach ($size in $sizes) {\n    & $imagemagickPath convert -background none -resize \"$($size.size)x$($size.size)\" icon.svg $size.name\n    if ($LASTEXITCODE -eq 0) {\n        Write-Host \"Created $($size.name) successfully\"\n    } else {\n        Write-Host \"Failed to create $($size.name)\"\n        exit 1\n    }\n}\n\nWrite-Host \"Icon conversion complete!\"",
+          "execute": true
+        },
+        "js/content.js": {
+          "content": "// Initialize extension state\nlet isEnabled = true;\nlet highlightedWords = new Set();\n\n// Function to create tooltip element\nfunction createTooltip(word, meaning) {\n    const tooltip = document.createElement('div');\n    tooltip.className = 'gre-tooltip';\n    tooltip.textContent = meaning;\n    tooltip.style.position = 'absolute';\n    tooltip.style.zIndex = '10000';\n    tooltip.style.backgroundColor = 'white';\n    tooltip.style.border = '1px solid #ccc';\n    tooltip.style.padding = '5px';\n    tooltip.style.borderRadius = '3px';\n    tooltip.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';\n    tooltip.style.maxWidth = '300px';\n    tooltip.style.wordWrap = 'break-word';\n    return tooltip;\n}\n\n// Function to highlight words\nfunction highlightWords() {\n    if (!isEnabled) return;\n\n    const textNodes = document.evaluate(\n        \"//text()[not(ancestor::script) and not(ancestor::style)]\",\n        document.body,\n        null,\n        XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE,\n        null\n    );\n\n    for (let i = 0; i < textNodes.snapshotLength; i++) {\n        const node = textNodes.snapshotItem(i);\n        const text = node.textContent;\n        const words = text.split(/\\b/);\n\n        let newHTML = '';\n        for (const word of words) {\n            const lowerWord = word.toLowerCase();\n            if (greWordList[lowerWord] && !highlightedWords.has(word)) {\n                highlightedWords.add(word);\n                newHTML += `<span class=\"gre-highlight\" data-word=\"${word}\" data-meaning=\"${greWordList[lowerWord]}\">${word}</span>`;\n            } else {\n                newHTML += word;\n            }\n        }\n\n        if (newHTML !== text) {\n            const span = document.createElement('span');\n            span.innerHTML = newHTML;\n            node.parentNode.replaceChild(span, node);\n        }\n    }\n}\n\n// Function to handle tooltip events\nfunction handleTooltipEvents() {\n    document.addEventListener('mouseover', (e) => {\n        if (e.target.classList.contains('gre-highlight')) {\n            const word = e.target.dataset.word;\n            const meaning = e.target.dataset.meaning;\n            if (meaning) {\n                const tooltip = createTooltip(word, meaning);\n                document.body.appendChild(tooltip);\n\n                const rect = e.target.getBoundingClientRect();\n                tooltip.style.left = `${rect.left + window.scrollX}px`;\n                tooltip.style.top = `${rect.bottom + window.scrollY + 5}px`;\n\n                e.target.addEventListener('mouseout', () => {\n                    tooltip.remove();\n                }, { once: true });\n            }\n        }\n    });\n}\n\n// Initialize extension\nfunction initialize() {\n    // Load extension state from storage\n    browser.storage.local.get('isEnabled', (result) => {\n        isEnabled = result.isEnabled !== undefined ? result.isEnabled : true;\n        if (isEnabled) {\n            highlightWords();\n            handleTooltipEvents();\n        }\n    });\n\n    // Listen for state changes from popup\n    browser.runtime.onMessage.addListener((message) => {\n        if (message.type === 'toggle') {\n            isEnabled = message.isEnabled;\n            if (isEnabled) {\n                highlightWords();\n                handleTooltipEvents();\n            } else {\n                // Remove highlights\n                document.querySelectorAll('.gre-highlight').forEach(el => {\n                    el.replaceWith(el.textContent);\n                });\n                highlightedWords.clear();\n            }\n        } else if (message.type === 'getWordCount') {\n            return Promise.resolve({ count: highlightedWords.size });\n        }\n    });\n}\n\n// Start initialization\ninitialize();\n\n// Handle dynamic content changes\nconst observer = new MutationObserver((mutations) => {\n    if (isEnabled) {\n        highlightWords();\n    }\n});\n\nobserver.observe(document.body, {\n    childList: true,\n    subtree: true,\n    characterData: true\n});"
+        },
+        "popup/popup.html": {
+          "content": "<!DOCTYPE html>\n<html>\n<head>\n    <meta charset=\"UTF-8\">\n    <style>\n        body {\n            width: 200px;\n            padding: 10px;\n            font-family: Arial, sans-serif;\n        }\n        .container {\n            display: flex;\n            flex-direction: column;\n            gap: 10px;\n        }\n        .toggle-container {\n            display: flex;\n            align-items: center;\n            justify-content: space-between;\n        }\n        .switch {\n            position: relative;\n            display: inline-block;\n            width: 50px;\n            height: 24px;\n        }\n        .switch input {\n            opacity: 0;\n            width: 0;\n            height: 0;\n        }\n        .slider {\n            position: absolute;\n            cursor: pointer;\n            top: 0;\n            left: 0;\n            right: 0;\n            bottom: 0;\n            background-color: #ccc;\n            transition: .4s;\n            border-radius: 24px;\n        }\n        .slider:before {\n            position: absolute;\n            content: \"\";\n            height: 16px;\n            width: 16px;\n            left: 4px;\n            bottom: 4px;\n            background-color: white;\n            transition: .4s;\n            border-radius: 50%;\n        }\n        input:checked + .slider {\n            background-color: #2196F3;\n        }\n        input:checked + .slider:before {\n            transform: translateX(26px);\n        }\n        .word-count {\n            text-align: center;\n            font-size: 14px;\n            color: #666;\n        }\n    </style>\n</head>\n<body>\n    <div class=\"container\">\n        <div class=\"toggle-container\">\n            <span>Enable Highlighting</span>\n            <label class=\"switch\">\n                <input type=\"checkbox\" id=\"toggle\" checked>\n                <span class=\"slider\"></span>\n            </label>\n        </div>\n        <div class=\"word-count\" id=\"wordCount\">\n            Words found: 0\n        </div>\n    </div>\n    <script src=\"popup.js\"></script>\n</body>\n</html>"
+        },
+        "popup/popup.js": {
+          "content": "// Initialize popup\ndocument.addEventListener('DOMContentLoaded', () => {\n    const toggle = document.getElementById('toggle');\n    const wordCount = document.getElementById('wordCount');\n\n    // Load initial state\n    browser.storage.local.get('isEnabled', (result) => {\n        toggle.checked = result.isEnabled !== undefined ? result.isEnabled : true;\n    });\n\n    // Update word count\n    function updateWordCount() {\n        browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {\n            browser.tabs.sendMessage(tabs[0].id, { type: 'getWordCount' })\n                .then(response => {\n                    wordCount.textContent = `Words found: ${response.count}`;\n                })\n                .catch(() => {\n                    wordCount.textContent = 'Words found: 0';\n                });\n        });\n    }\n\n    // Handle toggle changes\n    toggle.addEventListener('change', () => {\n        const isEnabled = toggle.checked;\n        browser.storage.local.set({ isEnabled });\n\n        browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {\n            browser.tabs.sendMessage(tabs[0].id, {\n                type: 'toggle',\n                isEnabled\n            });\n        });\n    });\n\n    // Update word count periodically\n    updateWordCount();\n    setInterval(updateWordCount, 1000);\n});"
+        },
+        "css/tooltip.css": {
+          "content": ".gre-highlight {\n    background-color: rgba(255, 255, 0, 0.3);\n    cursor: help;\n    position: relative;\n    display: inline-block;\n}\n\n.gre-tooltip {\n    position: absolute;\n    z-index: 10000;\n    background-color: white;\n    border: 1px solid #ccc;\n    padding: 5px;\n    border-radius: 3px;\n    box-shadow: 0 2px 5px rgba(0,0,0,0.2);\n    max-width: 300px;\n    word-wrap: break-word;\n    font-family: Arial, sans-serif;\n    font-size: 14px;\n    line-height: 1.4;\n    color: #333;\n}"
+        },
+        "manifest.json": {
+          "content": "{\n  \"manifest_version\": 2,\n  \"name\": \"GRE Word Helper\",\n  \"version\": \"1.0\",\n  \"description\": \"Helps users learn GRE vocabulary by highlighting words on web pages and showing their meanings in tooltips\",\n  \"icons\": {\n    \"19\": \"icons/icon-19.png\",\n    \"38\": \"icons/icon-38.png\",\n    \"48\": \"icons/icon-48.png\",\n    \"96\": \"icons/icon-96.png\"\n  },\n  \"permissions\": [\n    \"storage\",\n    \"activeTab\",\n    \"<all_urls>\"\n  ],\n  \"browser_action\": {\n    \"default_icon\": {\n      \"19\": \"icons/icon-19.png\",\n      \"38\": \"icons/icon-38.png\"\n    },\n    \"default_popup\": \"popup/popup.html\",\n    \"default_title\": \"GRE Word Helper\"\n  },\n  \"content_scripts\": [\n    {\n      \"matches\": [\"<all_urls>\"],\n      \"js\": [\"js/wordlist.js\", \"js/content.js\"],\n      \"css\": [\"css/tooltip.css\"],\n      \"run_at\": \"document_end\"\n    }\n  ],\n  \"web_accessible_resources\": [\n    \"js/wordlist.js\"\n  ]\n}"
+        }
+      },
+      "execution_order": [
+        "Create directories",
+        "Create manifest.json",
+        "Create icon.svg",
+        "Create convert_icons.ps1",
+        "Execute convert_icons.ps1",
+        "Create content.js",
+        "Create popup.html",
+        "Create popup.js",
+        "Create tooltip.css"
+      ],
+      "user_input": {
+        "required_files": ["wordlist.js"],
+        "instructions": "Please provide the wordlist.js file containing the GRE vocabulary dictionary"
+      }
+    }
+  }
+} 
